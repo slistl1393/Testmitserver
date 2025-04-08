@@ -1,29 +1,33 @@
-import requests
 import streamlit as st
+import requests
 
-# Deine URL für die API
+# URL des Servers
 url = "http://51.21.199.100:8000/upload/"
 
-# Deine Bilddaten (Stellen Sie sicher, dass du die richtigen Dateien übergibst)
-files = {
-    'plan_image': open('plan.png', 'rb'),
-    'verzeichnis_image': open('verzeichnis.png', 'rb')
-}
+# Lade die Bilder über Streamlit hoch
+plan_image = st.file_uploader("Lade das Planbild hoch", type=["png", "jpg", "jpeg"])
+verzeichnis_image = st.file_uploader("Lade das Verzeichnisbild hoch", type=["png", "jpg", "jpeg"])
 
-# POST-Request an den Server
-response = requests.post(url, files=files)
+# Wenn beide Bilder hochgeladen wurden
+if plan_image is not None and verzeichnis_image is not None:
+    # Erstelle ein Dictionary, um die Dateien zu senden
+    files = {
+        'plan_image': plan_image,
+        'verzeichnis_image': verzeichnis_image
+    }
 
-# Überprüfe, ob die Antwort erfolgreich war
-if response.status_code == 200:
+    # POST-Anfrage an den Server
     try:
-        # Versuche, die Antwort als JSON zu parsen
-        st.write(response.json())
-    except ValueError as e:
-        # Falls die Antwort kein gültiges JSON ist, logge den Fehler
-        st.error(f"Fehler beim Parsen der Antwort als JSON: {e}")
-        st.write("Antworttext:", response.text)
-else:
-    st.error(f"Fehler: Server antwortete mit Statuscode {response.status_code}")
-    st.write("Antworttext:", response.text)
+        response = requests.post(url, files=files)
+        
+        # Überprüfe, ob die Antwort erfolgreich war
+        if response.status_code == 200:
+            st.write("Serverantwort:", response.json())  # Zeige die Antwort des Servers
+        else:
+            st.error(f"Fehler: Server antwortete mit Statuscode {response.status_code}")
+            st.write("Antworttext:", response.text)
+    except Exception as e:
+        st.error(f"Fehler bei der Anfrage: {e}")
+
 
 
