@@ -1,5 +1,6 @@
 import streamlit as st
 import requests
+pip install altair
 
 st.title("Bild hochladen")
 
