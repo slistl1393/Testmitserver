@@ -1,23 +1,18 @@
 import streamlit as st
 import requests
 
-# Titel der App
-st.title('Dateiupload und Verarbeitung')
+st.title("Bild hochladen")
 
-# Datei-Upload-Widget
-uploaded_file = st.file_uploader("Wählen Sie eine Datei", type=["png", "jpg", "jpeg"])
+plan_image = st.file_uploader("Lade den Plan hoch", type="png")
+verzeichnis_image = st.file_uploader("Lade das Verzeichnis-Bild hoch", type="png")
 
-if uploaded_file is not None:
-    # Anzeigen des hochgeladenen Bildes
-    st.image(uploaded_file, caption="Hochgeladenes Bild", use_column_width=True)
+if plan_image and verzeichnis_image:
+    files = {
+        "plan_image": plan_image,
+        "verzeichnis_image": verzeichnis_image
+    }
 
-    # Senden der Datei an den Server (via POST-Request)
-    files = {"file": uploaded_file.getvalue()}
-    response = requests.post("http://51.21.199.100:8000/upload/", files=files)
+    response = requests.post("http://<DEIN_SERVER_IP>:8000/upload/", files=files)
 
-    # Antwort des Servers anzeigen
-    if response.status_code == 200:
-        st.success("Datei erfolgreich verarbeitet!")
-        st.write(response.json())  # Falls der Server eine Antwort zurückgibt
-    else:
-        st.error("Fehler bei der Verarbeitung der Datei!")
+    st.write(response.json())
+
