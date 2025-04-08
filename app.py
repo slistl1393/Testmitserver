@@ -10,16 +10,20 @@ verzeichnis_image = st.file_uploader("Lade das Verzeichnisbild hoch", type=["png
 
 # Wenn beide Bilder hochgeladen wurden
 if plan_image is not None and verzeichnis_image is not None:
+    # Konvertiere die hochgeladenen Bilder in Bytes
+    plan_bytes = plan_image.read()
+    verzeichnis_bytes = verzeichnis_image.read()
+
     # Erstelle ein Dictionary, um die Dateien zu senden
     files = {
-        'plan_image': plan_image,
-        'verzeichnis_image': verzeichnis_image
+        'plan_image': ('plan.png', plan_bytes, plan_image.type),
+        'verzeichnis_image': ('verzeichnis.png', verzeichnis_bytes, verzeichnis_image.type)
     }
 
     # POST-Anfrage an den Server
     try:
         response = requests.post(url, files=files)
-        
+
         # Überprüfe, ob die Antwort erfolgreich war
         if response.status_code == 200:
             st.write("Serverantwort:", response.json())  # Zeige die Antwort des Servers
