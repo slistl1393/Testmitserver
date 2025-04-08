@@ -12,7 +12,7 @@ if plan_image and verzeichnis_image:
         "verzeichnis_image": verzeichnis_image
     }
 
-    response = requests.post("http://<DEIN_SERVER_IP>:8000/upload/", files=files)
+    response = requests.post("http://51.21.199.100:8000//upload/", files=files)
 
     st.write(response.json())
 
